@@ -111,12 +111,12 @@ Variable fonts ajudam em performance/consistência quando há múltiplos pesos. 
 
 ### 4.4 Grid e breakpoints
 - Mobile: 4 colunas, gutter 16
-- Tablet: 8 colunas, gutter 20
+- Tablet: 8 colunas, gutter 20. View adota o Topbar de mobile (menu hamburger) ao invés do layout de desktop esticado; listas devem fluir para grid de duas colunas.
 - Desktop: 12 colunas, gutter 24
 
 Breakpoints (px):
 - `sm`: 480
-- `md`: 768
+- `md`: 768 (ponto de mudança mobile/tablet para hamburger menu)
 - `lg`: 1024
 - `xl`: 1280
 - `2xl`: 1536
@@ -132,8 +132,9 @@ Bordas finas (1px) com contraste suficiente.
 - Elevação é **discreta**, mais “papel sobre papel” do que “float cyber”.
 - Preferir sombras suaves e curtas para manter leitura.
 
-### 4.7 Motion (microinterações)
-- Duração: 120ms (micro), 200ms (default), 320ms (macro)
+### 4.7 Motion (microinterações & transições)
+- **Framer Motion:** utilizado para transições suaves de entrada/saída de página (`AnimatePresence` com animação de slide-up e duração de 0.2s).
+- Duração geral: 120ms (micro), 200ms (default), 320ms (macro). Animações do drawer da Topbar no mobile também utilizam Framer Motion.
 - Easing: `cubic-bezier(0.2, 0.8, 0.2, 1)`
 - Respeitar `prefers-reduced-motion` (sem animações que “pulem”).
 
@@ -180,11 +181,11 @@ Bordas finas (1px) com contraste suficiente.
 **Variantes**
 - `primary` (coral)
 - `secondary` (blue)
-- `ghost` (sem fundo)
+- `ghost` (sem fundo, padronizado por exemplo em botões de "Voltar" globais)
 - `danger`
 - `gradient` (uso seletivo: CTA principal do fluxo)
 
-**Tamanhos**
+**Tamanhos (tamanhos fixos aplicados globalmente)**
 - sm (32px), md (40px), lg (48px)
 
 **Estados**
@@ -195,12 +196,13 @@ Bordas finas (1px) com contraste suficiente.
 - foco visível citeturn0search3
 
 ### 6.3 Input / TextField
-- label + helper + error
+- label + helper + error (campos empilhados verticalmente)
 - ícone opcional
 - máscara/validação via schema
 
 **Estados**
 - default, hover, focus, invalid, disabled
+- **Nota técnica sobre Z-Index/Sticky:** Componentes como tooltips, modais ou toolbars (topbar) precisam reajustar seu `z-index` e `sticky` para evitar sobreposição ou bloqueio no clique de inputs.
 
 ### 6.4 Select / Combobox
 - suporte a teclado
@@ -214,8 +216,9 @@ Bordas finas (1px) com contraste suficiente.
 - ações: primary/secondary
 
 ### 6.6 Toast
-- sucesso/erro/aviso/info
-- auto-dismiss com pausa ao hover
+- Utilização de `react-hot-toast` para notificações customizadas para substituir completamente os alertas de sistema (`alert()`).
+- Constroem uma estética Neo-Brutalista com bordas sólidas `#1A1A1A`, sombras marcadas (`4px 4px 0px 0px #1A1A1A`) e cores vibrantes conforme o estado (`#B8F400` para sucesso, `#FF4D3D` para erro).
+- auto-dismiss natural e posicionado de forma acessível para feedback contínuo.
 - não usar como único canal de erro crítico
 
 ### 6.7 BannerAlert (crítico)
@@ -228,7 +231,7 @@ Banner deve ser persistente enquanto inválido.
 - header fixo opcional
 - zebra sutil
 - coluna de ações alinhada à direita
-- responsivo: vira cards/stack no mobile
+- responsivo: vira cards/stack no mobile e adota layout de duas colunas (dual-column) no tablet (telas a partir de `md`).
 
 ### 6.9 Card (editorial)
 - usado no dashboard e em “detalhes do evento”
