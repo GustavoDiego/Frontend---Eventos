@@ -212,7 +212,8 @@ type CheckinState = {
 - **Loading**: skeleton/spinner + ações desabilitadas
 - **Erro**: mensagem clara + botão “Tentar novamente” quando fizer sentido
 - **Vazio**: estado informativo com CTA (ex.: “Criar evento”)
-- **Sucesso**: toast ou feedback visual rápido
+- **Sucesso/Erro via Toast**: utilizar notificações de toast padronizadas com a biblioteca `react-hot-toast` contendo UI visualmente integrada com o sistema para confirmações globais, dispensando uso de `window.alert`.
+- **Transições fluidas**: Animações de página com `framer-motion` configuradas através de `AnimatePresence`.
 
 > Se faltar isso, parece protótipo. E o avaliador percebe.
 
