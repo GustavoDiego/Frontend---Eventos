@@ -1,8 +1,8 @@
 # Requisitos Funcionais e Não Funcionais — Desafio Frontend React (Sistema de Eventos)
 
-**Versão:** 1.0  
-**Data:** 27/02/2026  
-**Fonte:** desafio-novo.pdf
+**Versão:** 2.0  
+**Data:** 28/02/2026  
+
 
 ## 1. Visão geral
 
@@ -269,14 +269,16 @@ Fora do escopo (não solicitado no documento):
 
 #### RNF-05 — HTML semântico e responsividade (SHOULD)
 - HTML semântico
-- Layout responsivo (desktop/mobile)
+- Layout responsivo (desktop, tablets em grids e menu tipo gaveta (hamburger), mobile com stack)
 
 #### RNF-06 — UX e feedbacks consistentes (MUST)
-- Loading/erro/alertas de validação consistentes
+- Transições de página com animações de Slide-up contínuas para fluidez e estética
+- Feedback com notificações Toast padronizadas que descartam interações abruptas do navegador a cada operação de sucesso/erro
 - Mensagens claras (sem “erro genérico”)
 
 #### RNF-07 — Consistência visual (SHOULD)
-- Padrão visual único (cores, espaçamento, tipografia)
+- Padrão visual alinhado ao Neo-Brutalismo customizado
+- Organização controlada de botões expandidos na largura mobile.
 
 ### 3.4 Diferenciais valorizados (opcionais)
 
