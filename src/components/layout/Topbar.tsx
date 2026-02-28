@@ -10,7 +10,7 @@ export function Topbar() {
   const [logoPos, setLogoPos] = useState({ x: 0, y: 0 });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Close mobile menu when screen resizes to desktop
+  // Close drawer when resizing to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -43,9 +43,9 @@ export function Topbar() {
 
   return (
     <>
-<header className="fixed top-0 left-0 right-0 h-24 bg-[#FF4D3D] border-b-4 border-[#1A1A1A] flex items-center justify-between px-4 lg:px-12 z-50">
+      <header className="fixed top-0 left-0 right-0 h-24 bg-[#FF4D3D] border-b-4 border-[#1A1A1A] flex items-center justify-between px-4 lg:px-12 z-50">
         <div className="flex items-center gap-4 lg:gap-12">
-          {/* Mobile Menu Button */}
+          {/* Hamburger — mobile + tablet */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-2 text-[#FAF6EF] hover:bg-[#1A1A1A] border-2 border-transparent hover:border-[#1A1A1A] transition-colors"
@@ -69,13 +69,14 @@ export function Topbar() {
             </span>
           </h1>
 
+          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-6 mt-2">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) => `
-                  font-display text-xl lg:text-2xl uppercase tracking-wider transition-all duration-200 px-4 py-2 border-2 
+                  font-display text-xl lg:text-2xl uppercase tracking-wider transition-all duration-200 px-4 py-2 border-2
                   ${isActive
                     ? 'bg-[#FAF6EF] text-[#1A1A1A] border-[#1A1A1A] shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] -translate-y-[2px]'
                     : 'bg-transparent text-[#FAF6EF] border-transparent hover:border-[#1A1A1A] hover:bg-[#2D5BFF] hover:text-[#FAF6EF] hover:shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] hover:-translate-y-[2px]'}
@@ -100,7 +101,7 @@ export function Topbar() {
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile / Tablet Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
