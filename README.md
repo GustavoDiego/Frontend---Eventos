@@ -106,6 +106,11 @@ Configure em **Settings → Environment Variables**:
 Importante:
 - `VITE_*` é lido em build time; mudou a env → precisa de redeploy.
 
+### Observações sobre o back (Render)
+
+- Como o back está rodando no Render, o **DB tem vida útil de ~1 mês** (pode ser apagado após esse período).
+- Após **~15 minutos de inatividade**, a API pode “dormir” (cold start). Se isso acontecer, pode ser necessário **recarregar a página algumas vezes** até a API responder.
+
 ### Checklist final
 - Backend com CORS permitindo o domínio da Vercel
 - `VITE_API_URL` apontando para a API correta
