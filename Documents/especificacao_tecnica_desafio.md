@@ -34,10 +34,10 @@ A aplicação é um painel web para organizadores de eventos, com autenticação
 - Zod (schemas e validação consistente)
 
 ### 2.4 UI / Estilo
-Escolher 1:
-- TailwindCSS + componentes próprios
-- MUI (Material UI)
-- Chakra UI
+- Design System Neo-Brutalista customizado implementado.
+- TailwindCSS
+- Framer Motion (Transições AnimatePresence, slide-up 0.2s e mobile drawers)
+- React-hot-toast (toasts customizados em lugar de alerts padrão)
 
 ### 2.5 Qualidade
 - ESLint + Prettier
@@ -72,17 +72,18 @@ src/
       QueryProvider.tsx
   components/
     layout/
-      AppShell/
-      Sidebar/
-      Topbar/
+      AppShell.tsx
+      Sidebar.tsx
+      Topbar.tsx
+      Transitions/
+        PageTransition.tsx
     ui/
-      Button/
-      Input/
-      Modal/
-      Table/
-      EmptyState/
-      Loading/
-      Toast/
+      Button.tsx
+      Input.tsx
+      Select.tsx
+      EmptyState.tsx
+      Loading.tsx
+      BannerAlert.tsx
   domain/
     auth/
       auth.schema.ts
@@ -391,9 +392,10 @@ Definição proposta (simples e justificável):
 
 ### 8.5.3 Alertas e feedbacks
 - Banner fixo no topo da tela para violações críticas (ex.: “Nenhuma regra ativa”)
-- Erros de campo inline no editor (form/modal)
-- Toast para ações (criado/editado/removido/salvo)
+- Erros de campo em forms (empilhados verticalmente) no editor
+- Toast customizado via (`react-hot-toast`) com estética Neo-Brutalista para ações (criado/editado/removido/salvo), ao invés de alertas de browser que podem bloquear a tela
 - Desabilitar “Salvar” quando inválido ou enquanto `saving=true`
+- Certificar-se de ajustes de `z-index` e layouts `sticky` para que os toasts e toolbars não bloqueiem inputs de formulário subjacentes.
 
 ---
 
