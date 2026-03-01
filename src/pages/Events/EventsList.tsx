@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/Select';
 import { Loading } from '@/components/ui/Loading';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { BannerAlert } from '@/components/ui/BannerAlert';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import toast from 'react-hot-toast';
 
 export function EventsList() {
@@ -17,6 +18,7 @@ export function EventsList() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   const hasActiveFilters = Boolean(search.trim() || status);
   const handleClearFilters = () => {
@@ -41,8 +43,14 @@ export function EventsList() {
   });
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Tem certeza que deseja remover este evento?')) {
-      deleteMutation.mutate(id);
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget, {
+        onSettled: () => setDeleteTarget(null),
+      });
     }
   };
 
@@ -134,6 +142,17 @@ export function EventsList() {
           )}
         </>
       )}
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Remover Evento"
+        message="Tem certeza que deseja remover este evento? Esta ação não pode ser desfeita."
+        confirmLabel="Remover"
+        cancelLabel="Cancelar"
+        variant="danger"
+        loading={deleteMutation.isPending}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
