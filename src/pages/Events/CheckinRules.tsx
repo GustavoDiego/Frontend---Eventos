@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Save, ArrowLeft } from 'lucide-react';
@@ -8,6 +8,7 @@ import { CheckinRule } from '@/domain/checkin/checkin.schema';
 import { Button } from '@/components/ui/Button';
 import { Loading } from '@/components/ui/Loading';
 import { BannerAlert } from '@/components/ui/BannerAlert';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { CheckinRuleForm } from './CheckinRuleForm';
 import toast from 'react-hot-toast';
 
@@ -15,6 +16,7 @@ export function CheckinRules() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [removeTarget, setRemoveTarget] = useState<string | null>(null);
 
   const [state, dispatch] = useReducer(checkinReducer, {
     rules: [],
@@ -72,8 +74,13 @@ export function CheckinRules() {
   };
 
   const handleRemove = (ruleId: string) => {
-    if (window.confirm('Remover esta regra?')) {
-      dispatch({ type: 'REMOVE_RULE', payload: ruleId });
+    setRemoveTarget(ruleId);
+  };
+
+  const confirmRemove = () => {
+    if (removeTarget) {
+      dispatch({ type: 'REMOVE_RULE', payload: removeTarget });
+      setRemoveTarget(null);
     }
   };
 
@@ -142,6 +149,17 @@ export function CheckinRules() {
           </p>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={removeTarget !== null}
+        title="Remover Regra"
+        message="Tem certeza que deseja remover esta regra de check-in?"
+        confirmLabel="Remover"
+        cancelLabel="Cancelar"
+        variant="warning"
+        onConfirm={confirmRemove}
+        onCancel={() => setRemoveTarget(null)}
+      />
     </div>
   );
 }
