@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Users, Edit, Trash2, Plus, ArrowRightLeft } from 'lucide-react';
+import { Users, Pencil, Trash2, Plus, ArrowRightLeft } from 'lucide-react';
 import { participantsService, eventsService } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -58,16 +58,18 @@ export function ParticipantsList() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-2xl font-display font-normal">Participantes</h2>
-        <Button className="w-full sm:w-auto" onClick={() => navigate('/participantes/novo')}>
+        <h2 className="text-5xl md:text-6xl font-display font-normal text-ink uppercase tracking-wider">
+          Participantes
+        </h2>
+        <Button variant="primary" size="md" className="w-full sm:w-auto" onClick={() => navigate('/participantes/novo')}>
           <Plus className="w-5 h-5 mr-2" />
-          Adicionar Participante
+          Novo Participante
         </Button>
       </div>
 
-<div className="bg-surface p-4 rounded-md border border-border flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-row gap-4">
+      <div className="bg-surface border-4 border-ink shadow-[4px_4px_0px_0px_rgba(26,26,26,1)] p-4 flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-row gap-4">
         <div className="flex-1 lg:w-auto">
           <Input
             placeholder="Buscar por nome ou e-mail..."
@@ -99,59 +101,61 @@ export function ParticipantsList() {
         </div>
       </div>
 
-      {error && <BannerAlert type="error" message="Erro ao carregar lista de participantes." />}
+      {error && <BannerAlert type="error" message="Erro ao carregar a lista de participantes." />}
 
       {isLoading ? <Loading /> : (
         <>
           {participantes?.length === 0 ? (
             <EmptyState
               icon={Users}
-              title="Nenhum participante"
-              description="Não foram encontrados participantes com os filtros atuais."
+              title="Nenhum participante encontrado"
+              description="Cadastre participantes para começar a gerenciar presenças."
               action={
-                <Button onClick={handleClearFilters} disabled={!hasActiveFilters}>Limpar filtros</Button>
+                <Button variant="primary" size="sm" onClick={() => navigate('/participantes/novo')}>
+                  <Plus className="w-4 h-4 mr-1" /> Cadastrar Participante
+                </Button>
               }
             />
           ) : (
-            <div className="bg-surface rounded-md border border-border overflow-hidden shadow-sm">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm whitespace-nowrap">
-                  <thead className="bg-bg/50 border-b border-border uppercase text-xs font-semibold text-muted">
-                    <tr>
-                      <th className="p-4">Nome</th>
-                      <th className="p-4">E-mail</th>
-                      <th className="p-4">Evento</th>
-                      <th className="p-4">Check-in</th>
-                      <th className="p-4 text-right">Ações</th>
+            <div className="overflow-x-auto">
+              <table className="w-full border-4 border-ink">
+                <thead>
+                  <tr className="bg-ink text-[#FAF6EF]">
+                    <th className="text-left p-4 font-display uppercase tracking-wider text-lg">Nome</th>
+                    <th className="text-left p-4 font-display uppercase tracking-wider text-lg">E-mail</th>
+                    <th className="text-left p-4 font-display uppercase tracking-wider text-lg">Evento</th>
+                    <th className="text-center p-4 font-display uppercase tracking-wider text-lg">Check-in</th>
+                    <th className="text-right p-4 font-display uppercase tracking-wider text-lg">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {participantes?.map((p, i) => (
+                    <tr key={p.id} className={`border-t-2 border-ink ${i % 2 === 0 ? 'bg-surface' : 'bg-bg'} hover:bg-[#B8F400] transition-colors`}>
+                      <td className="p-4 font-bold text-ink">{p.nome}</td>
+                      <td className="p-4 text-muted">{p.email}</td>
+                      <td className="p-4 text-muted">{getEventName(p.eventoId)}</td>
+                      <td className="p-4 text-center">
+                        <span className={`inline-block px-3 py-1 text-xs font-bold uppercase border-2 border-ink ${p.checkin === 'FEITO' ? 'bg-success text-surface' : 'bg-warning text-ink'}`}>
+                          {p.checkin === 'FEITO' ? 'Sim' : 'Não'}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <div className="flex gap-2 justify-end">
+                          <Button variant="outline" size="sm" onClick={() => navigate(`/participantes/${p.id}/editar?transferir=true`)} title="Transferir">
+                            <ArrowRightLeft className="w-4 h-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => navigate(`/participantes/${p.id}/editar`)} title="Editar">
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button variant="danger" size="sm" onClick={() => handleDelete(p.id)} title="Remover" disabled={deleteMutation.isPending}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {participantes?.map((p) => (
-                      <tr key={p.id} className="hover:bg-bg/50">
-                        <td className="p-4 font-semibold text-ink">{p.nome}</td>
-                        <td className="p-4 text-ink">{p.email}</td>
-                        <td className="p-4 text-ink">{getEventName(p.eventoId)}</td>
-                        <td className="p-4">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${p.checkin === 'FEITO' ? 'bg-success/15 text-[#0F8A50]' : 'bg-warning/15 text-[#B37B16]'}`}>
-                            {p.checkin === 'FEITO' ? 'Feito' : 'Pendente'}
-                          </span>
-                        </td>
-                        <td className="p-4 text-right space-x-2">
-                          <Button variant="ghost" size="sm" onClick={() => navigate(`/participantes/${p.id}/editar?transferir=true`)} title="Transferir">
-                            <ArrowRightLeft className="w-4 h-4 text-secondary" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => navigate(`/participantes/${p.id}/editar`)} title="Editar">
-                            <Edit className="w-4 h-4 text-ink" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => handleDelete(p.id)} title="Remover" disabled={deleteMutation.isPending}>
-                            <Trash2 className="w-4 h-4 text-danger" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </>
