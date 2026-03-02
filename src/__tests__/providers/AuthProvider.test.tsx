@@ -2,7 +2,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AuthProvider, useAuth } from '@/app/providers/AuthProvider';
-import React from 'react';
 
 const AuthConsumer = () => {
   const { token, isAuthenticated, login, logout } = useAuth();
@@ -103,7 +102,7 @@ describe('AuthProvider', () => {
   });
 
   it('lanca erro ao usar useAuth fora do AuthProvider', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => { });
     expect(() => render(<AuthConsumer />)).toThrow('useAuth must be used within an AuthProvider');
     spy.mockRestore();
   });
